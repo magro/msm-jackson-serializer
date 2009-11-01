@@ -13,7 +13,9 @@ CATALINA_HA = 'org.apache.tomcat:catalina-ha:jar:6.0.18'
 MEMCACHED = artifact('spy.memcached:spymemcached:jar:2.4').from(file('lib/memcached-2.4.jar'))
 TC_COYOTE = transitive( 'org.apache.tomcat:coyote:jar:6.0.18' )
 JACKSON = transitive( 'org.codehaus.jackson:jackson-mapper-asl:jar:1.2.1' )
+#JACKSON = transitive( 'org.codehaus.jackson:jackson-mapper-asl:jar:1.3-SNAPSHOT' )
 MSM = transitive( 'de.javakaffee.web:memcached-session-manager:jar:1.1-SNAPSHOT' )
+CLANG = 'commons-lang:commons-lang:jar:2.4'
 
 # Testing
 JMEMCACHED = transitive( 'com.thimbleware.jmemcached:jmemcached-core:jar:0.6' ).reject { |a| a.group == 'org.slf4j' }
@@ -38,9 +40,10 @@ define 'msm-jackson-serializer' do
   project.group = 'de.javakaffee.web'
   project.version = '1.1-SNAPSHOT'
   
-  compile.with(MSM, SERVLET_API, CATALINA, CATALINA_HA, TC_COYOTE, MEMCACHED, JACKSON).using(:source=>'1.5', :target=>'1.5')
+  compile.with(MSM, SERVLET_API, CATALINA, CATALINA_HA, TC_COYOTE, MEMCACHED, JACKSON, CLANG).using(:source=>'1.5', :target=>'1.5')
   
   test.with( JMEMCACHED, HTTP_CLIENT, SLF4J, JMOCK_CGLIB )
+  test.using :testng
   
   package :jar, :id => 'msm-jackson-serializer'
   package :sources
